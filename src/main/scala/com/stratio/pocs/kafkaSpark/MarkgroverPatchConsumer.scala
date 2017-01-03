@@ -16,7 +16,7 @@ import org.apache.spark.streaming.kafka.KafkaUtils
 object MarkgroverPatchConsumer extends App {
 
   override def main(args: Array[String]): Unit = {
-    val brokers = "localhost:9092"
+    val brokers = "gosec2.labs.stratio.com:9092"
     val topics = "test"
 
     // Create context with 2 second batch interval
@@ -36,14 +36,14 @@ object MarkgroverPatchConsumer extends App {
     )
 
     val kafkaSslParams = Map[String, String](
-      "bootstrap.servers"->"localhost:9092",
+      "bootstrap.servers"->"gosec:9092",
       "security.protocol"->"SSL",
       "ssl.protocol"->"TLS",
-      "ssl.keystore.location"-> this.getClass.getResource("../../../../../../ssl/server.keystore.jks").getPath,
-      "ssl.keystore.password"->"test1234",
-      "ssl.key.password"->"test1234",
-      "ssl.truststore.location"-> this.getClass.getResource("../../../../../../ssl/server.truststore.jks").getPath,
-      "ssl.truststore.password"->"test1234",
+      "ssl.keystore.location"-> this.getClass.getResource("/home/fhuertas/Apps/kafka/config/gosec-sso-keystore").getPath,
+      "ssl.keystore.password"->"stratio",
+      "ssl.key.password"->"stratio",
+      "ssl.truststore.location"-> this.getClass.getResource("/home/fhuertas/Apps/kafka/config/kafka-truststore").getPath,
+      "ssl.truststore.password"->"stratio",
       "ssl.client.auth"->"required",
       "ssl.enabled.protocols"->"TLSv1.2,TLSv1.1,TLSv1",
       "ssl.keystore.type"->"JKS",

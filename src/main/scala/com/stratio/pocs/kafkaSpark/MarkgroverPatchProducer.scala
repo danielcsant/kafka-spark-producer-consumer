@@ -1,4 +1,4 @@
-package com.stratio.pocs.kafka
+package com.stratio.pocs.kafkaSpark
 
 import java.util.Properties
 import java.util.concurrent.ExecutionException
@@ -18,7 +18,8 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object MarkgroverPatchProducer extends App {
 
   override def main(args: Array[String]): Unit = {
-    val topic = "test"
+    val brokers = "gosec2.labs.stratio.com:9092"
+    val topics = "audit"
     val isAsync = false
 
     val props = new Properties()
@@ -30,12 +31,11 @@ object MarkgroverPatchProducer extends App {
 
     props.put("security.protocol", "SSL")
     props.put("ssl.protocol", "TLS")
-    props.put("ssl.keystore.location", this.getClass.getResource("../../../../ssl/server.keystore.jks").getPath)
-    props.put("ssl.keystore.password", "test1234")
-    props.put("ssl.key.password", "test1234")
-    props.put("ssl.truststore.location", this.getClass.getResource("../../../../ssl/server.truststore.jks")
-      .getPath)
-    props.put("ssl.truststore.password", "test1234")
+    props.put("ssl.keystore.location", "/home/fhuertas/Apps/kafka/gosec-sso-keystore")
+    props.put("ssl.keystore.password","stratio")
+    props.put("ssl.key.password","stratio")
+    props.put("ssl.truststore.location", "/home/fhuertas/Apps/kafka/kafka-truststore")
+    props.put("ssl.truststore.password","stratio")
     props.put("ssl.client.auth", "required")
     props.put("ssl.enabled.protocols", "TLSv1.2,TLSv1.1,TLSv1")
     props.put("ssl.keystore.type", "JKS")
@@ -46,12 +46,12 @@ object MarkgroverPatchProducer extends App {
     val messageStr: String = "Message_1"
     val startTime = System.currentTimeMillis()
     if (isAsync) { // Send asynchronously
-      producer.send(new ProducerRecord(topic,
+      producer.send(new ProducerRecord(topics,
         messageNo,
         messageStr))
     } else { // Send synchronously
       Try {
-        producer.send(new ProducerRecord(topic,
+        producer.send(new ProducerRecord(topics,
           messageNo,
           messageStr)).get()
         System.out.println("Sent message: (" + messageNo + ", " + messageStr + ")")
